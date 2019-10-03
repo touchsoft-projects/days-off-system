@@ -5,10 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface PeriodRepository extends JpaRepository<PeriodEntity, Integer> {
-
-    List<PeriodEntity> findAllByUserId(int id);
-
-    void deleteAllByUserId(int id);
-
+public interface PeriodRepository extends JpaRepository<PeriodEntity, String> {
+    List<PeriodEntity> findAllByUserId(String id);
 }

@@ -1,11 +1,6 @@
 package by.touchsoft.office.daysoffsystem.db.repository.entity;
 
 import by.touchsoft.office.daysoffsystem.enumerations.PeriodType;
-import by.touchsoft.office.daysoffsystem.serialization.LocalDateDeserializer;
-import by.touchsoft.office.daysoffsystem.serialization.LocalDateSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.Column;
@@ -25,24 +20,18 @@ public class PeriodEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private String id;
 
     @NonNull
     @Column(name = "user_id")
-    private int userId;
+    private String userId;
 
     @NonNull
     @Column(name = "start_date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate startDate;
 
     @NonNull
     @Column(name = "end_date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate endDate;
 
     @NonNull
@@ -50,11 +39,11 @@ public class PeriodEntity {
     @Column(name = "type_id", nullable = false)
     private PeriodType periodType;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -82,11 +71,11 @@ public class PeriodEntity {
         this.periodType = periodType;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(final int userId) {
+    public void setUserId(final String userId) {
         this.userId = userId;
     }
 }

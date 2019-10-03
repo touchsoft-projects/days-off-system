@@ -1,37 +1,32 @@
-package by.touchsoft.office.daysoffsystem.db.repository.dto.dtoEntity;
+package by.touchsoft.office.daysoffsystem.db.repository.dto;
 
 import by.touchsoft.office.daysoffsystem.db.repository.entity.PeriodEntity;
 import by.touchsoft.office.daysoffsystem.enumerations.PeriodType;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * This class is used to interact with view and hides unwanted data of {@link PeriodEntity} entity.
  */
 public class PeriodDto {
 
-    private int id;
-    private int userId;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private String id;
+    private String userId;
     private String startDate;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String endDate;
     private PeriodType periodType;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(final int userId) {
+    public void setUserId(final String userId) {
         this.userId = userId;
     }
 

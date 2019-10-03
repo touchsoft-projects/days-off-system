@@ -1,18 +1,23 @@
 package by.touchsoft.office.daysoffsystem.db.repository.entity;
 
+import by.touchsoft.office.daysoffsystem.web.security.authorities.Role;
 import org.springframework.lang.NonNull;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -21,7 +26,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private String id;
 
     @NonNull
     @Column(name = "first_name", nullable = false)
@@ -41,15 +46,25 @@ public class UserEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private List<PeriodEntity> periodEntities = new LinkedList<>();
+    @NonNull
+    @Column(name = "password")
+    private String password;
 
-    public int getId() {
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_name")
+    private Set<Role> roles = new HashSet<>();
+
+    public String getId() {
         return id;
     }
 
-    public void setId(final int id) {
+    public void setId(final String id) {
         this.id = id;
     }
 
@@ -93,11 +108,61 @@ public class UserEntity {
         this.email = email;
     }
 
-    public List<PeriodEntity> getPeriodEntities() {
-        return periodEntities;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPeriodEntities(final List<PeriodEntity> periodEntities) {
-        this.periodEntities = periodEntities;
+    public void setPassword(String password) {
+        this.password = password;
     }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        UserEntity userEntity = (UserEntity) obj;
+        return this.id == userEntity.id;
+    }
+
+    @Override
+    public String toString() {
+        String text = "UserEntity [id=%s, firstName=%s, secondName=%s, lastName=%s, passportId=%s, email=%s, enabled=%s]";
+        return String.format(
+                text,
+                id,
+                firstName,
+                secondName,
+                lastName,
+                passportId,
+                email,
+                enabled
+        );
+    }
+
 }

@@ -8,18 +8,18 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class TestController {
+public class ViewControllerTest {
 
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new Controller()).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(new ViewController()).build();
     }
 
     @Test
-    public void testDaysoffTestResultOK() throws Exception {
-        this.mockMvc.perform(get("/daysoff/healthCheck"))
+    public void testHealthCheck() throws Exception {
+        this.mockMvc.perform(get("/healthCheck"))
                 .andExpect(status().isOk());
     }
 }
