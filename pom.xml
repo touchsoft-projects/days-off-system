@@ -9,6 +9,7 @@
     <packaging>war</packaging>
 
     <name>days-off-system</name>
+    <description>System which allows to track and manage days off and vacation periods of employees</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,6 +26,11 @@
         <jackson.core.version>2.9.10</jackson.core.version>
         <junit.version>4.12</junit.version>
         <spring-test.version>5.1.9.RELEASE</spring-test.version>
+        <mariadb.client.version>2.4.4</mariadb.client.version>
+        <spring.boot.data.jpa.version>2.1.8.RELEASE</spring.boot.data.jpa.version>
+        <log4j.version>1.2.17</log4j.version>
+        <spring-data-jpa.version>2.1.10.RELEASE</spring-data-jpa.version>
+        <hibernate-core.version>5.4.4.Final</hibernate-core.version>
 
     </properties>
 
@@ -98,6 +104,31 @@
             <version>${spring-test.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb.client.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data-jpa.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

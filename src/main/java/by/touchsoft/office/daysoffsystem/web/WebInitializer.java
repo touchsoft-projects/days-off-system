@@ -1,6 +1,7 @@
 package by.touchsoft.office.daysoffsystem.web;
 
 import by.touchsoft.office.daysoffsystem.web.config.AppConfig;
+import by.touchsoft.office.daysoffsystem.web.config.HibernateConfig;
 import by.touchsoft.office.daysoffsystem.web.config.SwaggerConfig;
 import by.touchsoft.office.daysoffsystem.web.config.WebConfig;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -10,9 +11,10 @@ import javax.servlet.Filter;
 import java.nio.charset.StandardCharsets;
 
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class<?>[]{AppConfig.class};
+        return new Class<?>[]{AppConfig.class, HibernateConfig.class};
     }
 
     @Override
