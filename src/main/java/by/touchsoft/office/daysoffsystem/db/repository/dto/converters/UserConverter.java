@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * Class converts {@link UserEntity} into {@link UserDto} or vice versa to work with a view.
  */
 @Component
-public class UserConverter implements DtoEntityConverter<UserDto, UserEntity> {
+public class UserConverter extends DtoEntityConverter<UserDto, UserEntity> {
 
     private PeriodConverter periodConverter;
 

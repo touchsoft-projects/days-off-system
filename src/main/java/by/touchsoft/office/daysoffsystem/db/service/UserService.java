@@ -26,6 +26,7 @@ public class UserService {
     }
 
     public List<UserDto> getAll() {
+
         return userConverter.convertToDto(userRepository.findAll());
     }
 
@@ -38,8 +39,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void save(final UserEntity userEntity) {
-        userRepository.save(userEntity);
+    public void save(final UserDto userDto) {
+        userRepository.save(userConverter.convertToEntity(userDto));
     }
 
 }

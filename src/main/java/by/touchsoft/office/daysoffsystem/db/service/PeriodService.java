@@ -36,8 +36,8 @@ public class PeriodService {
         periodRepository.deleteById(id);
     }
 
-    public void save(final PeriodEntity periodEntity) {
-        periodRepository.save(periodEntity);
+    public void save(final PeriodDto periodDto) {
+        periodRepository.save(periodConverter.convertToEntity(periodDto));
     }
 
     public void deleteAllByUserId(final int id) {
