@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Interface converts entity into transfer objects (can be Set/List of them) or vice versa to work with a view.
+ * Class converts entity into transfer objects (can be Set/List of them) or vice versa to work with a view.
  *
  * @param <T> - Data Transfer Object.
  * @param <B> - Entity Object.
