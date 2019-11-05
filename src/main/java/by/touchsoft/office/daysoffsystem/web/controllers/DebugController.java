@@ -22,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * This debugging controller is used to test features and interact with database.
  */
 @RestController
-@RequestMapping("/daysoff")
+@RequestMapping("/daysoff/debug")
 public class DebugController {
 
     private Logger logger = Logger.getLogger(getClass());
