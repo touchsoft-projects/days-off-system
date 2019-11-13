@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This class interacts with database and controls an {@link UserEntity} entity by {@link UserRepository} interface.
+ * This class interacts with database and controls an {@link UserEntity} entity
+ * by {@link UserRepository} interface.
  */
 @Service
 @Transactional
@@ -20,7 +21,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserConverter userConverter;
 
-    public UserService(final UserRepository userRepository, final UserConverter userConverter) {
+    public UserService(
+            final UserRepository userRepository,
+            final UserConverter userConverter
+    ) {
         this.userRepository = userRepository;
         this.userConverter = userConverter;
     }
@@ -38,8 +42,7 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void save(final UserEntity userEntity) {
-        userRepository.save(userEntity);
+    public void save(final UserDto userDto) {
+        userRepository.save(userConverter.convertToEntity(userDto));
     }
-
 }

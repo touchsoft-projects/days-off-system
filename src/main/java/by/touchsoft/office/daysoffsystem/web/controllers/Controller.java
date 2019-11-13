@@ -1,10 +1,7 @@
 package by.touchsoft.office.daysoffsystem.web.controllers;
 
-import by.touchsoft.office.daysoffsystem.db.repository.dto.converters.PeriodConverter;
-import by.touchsoft.office.daysoffsystem.db.repository.dto.converters.UserConverter;
 import by.touchsoft.office.daysoffsystem.db.repository.dto.dtoEntity.PeriodDto;
 import by.touchsoft.office.daysoffsystem.db.repository.dto.dtoEntity.UserDto;
-import by.touchsoft.office.daysoffsystem.db.repository.entity.PeriodEntity;
 import by.touchsoft.office.daysoffsystem.db.service.PeriodService;
 import by.touchsoft.office.daysoffsystem.db.service.UserService;
 import org.apache.log4j.Logger;
@@ -19,27 +16,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * This controller interacts with database.
  */
 @RestController
-@RequestMapping("/daysoff")
+@RequestMapping("/daysoff/")
 public class Controller {
 
     private Logger logger = Logger.getLogger(getClass());
-    private UserService userService;
-    private PeriodConverter periodConverter;
-    private PeriodService periodService;
 
     @Autowired
-    public void init(final UserService userService, final PeriodService periodService,
-                     final PeriodConverter periodConverter) {
-        this.userService = userService;
-        this.periodConverter = periodConverter;
-        this.periodService = periodService;
-    }
+    private UserService userService;
+    @Autowired
+    private PeriodService periodService;
 
     @GetMapping("/healthCheck")
     public ResponseEntity<String> test() {
@@ -52,31 +44,28 @@ public class Controller {
             UserDto userDto = userService.getById(id);
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } catch (Exception e) {
-            logger.warn("user with id " + id + " is missing");
+            logger.warn("User with id " + id + " is missing.");
             return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
         }
     }
 
     @GetMapping("/getAll")
     public ResponseEntity<List<UserDto>> getAll() {
-        List<UserDto> userEntities = userService.getAll();
-        if (!userEntities.isEmpty()) {
-            return new ResponseEntity<>(userEntities, HttpStatus.OK);
+        List<UserDto> userDtos = userService.getAll();
+        if (!userDtos.isEmpty()) {
+            return new ResponseEntity<>(userDtos, HttpStatus.OK);
         } else {
-            logger.warn("Database is empty. Returned null");
-            return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+            logger.warn("Database is empty. Returned empty list.");
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.NO_CONTENT);
         }
     }
 
     @PostMapping("/addPeriod")
     public ResponseEntity<String> addPeriod(@RequestBody PeriodDto periodDto) {
         int userId = periodDto.getUserId();
-
         try {
-            PeriodEntity periodEntity = periodConverter.convertToEntity(periodDto);
-            periodEntity.setUserId(periodDto.getUserId());
-            periodService.save(periodEntity);
-            logger.warn("Custom period added to user with id: " + userId);
+            periodService.save(periodDto);
+            logger.info("Custom period added to user with id: " + userId);
             return new ResponseEntity<>("Custom period added to user with id " + userId, HttpStatus.OK);
         } catch (DateTimeParseException e) {
             return new ResponseEntity<>("Please, type date correctly. Example: 2017-12-30", HttpStatus.BAD_REQUEST);
@@ -85,18 +74,4 @@ public class Controller {
             return new ResponseEntity<>("Can't find user with id: " + userId, HttpStatus.BAD_REQUEST);
         }
     }
-
-    @GetMapping("/deleteUser")
-    public ResponseEntity<String> deleteUser(@RequestParam int id) {
-        try {
-            periodService.deleteAllByUserId(id);
-            userService.deleteById(id);
-            logger.info("user with id " + id + " removed.");
-            return new ResponseEntity<>("user with id " + id + " deleted", HttpStatus.OK);
-        } catch (Exception e) {
-            logger.warn("user with id " + id + " is missing.");
-            return new ResponseEntity<>("can't find user with id " + id, HttpStatus.BAD_REQUEST);
-        }
-    }
-
 }

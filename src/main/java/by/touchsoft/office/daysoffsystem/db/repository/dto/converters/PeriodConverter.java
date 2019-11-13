@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
  * Class converts {@link PeriodEntity} into {@link PeriodDto} or vice versa to work with a view.
  */
 @Component
-public class PeriodConverter implements DtoEntityConverter<PeriodDto, PeriodEntity> {
+public class PeriodConverter extends DtoEntityConverter<PeriodDto, PeriodEntity> {
 
     /**
      * This method converts {@link PeriodEntity} into {@link PeriodDto}.
@@ -43,6 +43,7 @@ public class PeriodConverter implements DtoEntityConverter<PeriodDto, PeriodEnti
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         periodEntity.setId(periodDto.getId());
+        periodEntity.setUserId(periodDto.getUserId());
         periodEntity.setStartDate(LocalDate.parse(periodDto.getStartDate(), formatter));
         periodEntity.setEndDate(LocalDate.parse(periodDto.getEndDate(), formatter));
         periodEntity.setPeriodType(periodDto.getPeriodType());
