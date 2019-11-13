@@ -8,9 +8,17 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import java.nio.charset.StandardCharsets;
 
 public class WebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+//        servletContext.setInitParameter("spring.profiles.active", "dev");
+    }
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
@@ -34,5 +42,4 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
         characterEncodingFilter.setForceEncoding(true);
         return new Filter[]{characterEncodingFilter};
     }
-
 }

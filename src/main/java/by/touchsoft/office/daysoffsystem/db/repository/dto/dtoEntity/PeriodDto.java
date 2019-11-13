@@ -58,5 +58,4 @@ public class PeriodDto {
     public void setPeriodType(final PeriodType periodType) {
         this.periodType = periodType;
     }
-
 }

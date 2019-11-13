@@ -58,5 +58,4 @@ public class UserConverter extends DtoEntityConverter<UserDto, UserEntity> {
 
         return userEntity;
     }
-
 }

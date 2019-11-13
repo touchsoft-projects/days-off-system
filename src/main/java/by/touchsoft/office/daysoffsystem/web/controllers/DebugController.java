@@ -5,8 +5,10 @@ import by.touchsoft.office.daysoffsystem.db.repository.dto.dtoEntity.UserDto;
 import by.touchsoft.office.daysoffsystem.db.service.PeriodService;
 import by.touchsoft.office.daysoffsystem.db.service.UserService;
 import by.touchsoft.office.daysoffsystem.enumerations.PeriodType;
+import by.touchsoft.office.daysoffsystem.web.WebInitializer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,20 +22,20 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * This debugging controller is used to test features and interact with database.
+ * <p>
+ * To enable, uncomment in {@link WebInitializer#onStartup}
  */
+@Profile("dev")
 @RestController
 @RequestMapping("/daysoff/debug")
 public class DebugController {
 
     private Logger logger = Logger.getLogger(getClass());
-    private UserService userService;
-    private PeriodService periodService;
 
     @Autowired
-    public void init(final UserService userService, final PeriodService periodService) {
-        this.userService = userService;
-        this.periodService = periodService;
-    }
+    private UserService userService;
+    @Autowired
+    private PeriodService periodService;
 
     @PostMapping("/addUser")
     public ResponseEntity<String> addUser(@RequestBody UserDto userDto) {
@@ -82,5 +84,4 @@ public class DebugController {
             return new ResponseEntity<>("Can't find user with id: " + id, HttpStatus.BAD_REQUEST);
         }
     }
-
 }

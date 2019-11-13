@@ -19,7 +19,7 @@ public class TestController {
 
     @Test
     public void testDaysoffTestResultOK() throws Exception {
-        this.mockMvc.perform(get("/daysoff/debug/healthCheck"))
+        this.mockMvc.perform(get("/daysoff/healthCheck"))
                 .andExpect(status().isOk());
     }
 }
