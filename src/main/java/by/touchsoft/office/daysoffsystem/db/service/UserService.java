@@ -70,6 +70,14 @@ public class UserService {
         UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
         copyToEntity(userDto, userEntity);
     }
+    
+    public String getIdByEmail(String email) {
+    	UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity != null) {
+        	return userEntity.getId();
+        }
+        return null;
+    }
 
     /**
      * This method updates the password.
@@ -92,11 +100,13 @@ public class UserService {
         userEntity.setEnabled(userDto.isEnabled());
         userEntity.setPassportId(userDto.getPassportId());
         userEntity.setRoles(userDto.getRoles());
+		userEntity.setPassword(userDto.getPassword());
     }
 
     private UserDto toDto(UserEntity userEntity) {
         UserDto userDto = new UserDto();
 
+        userDto.setId(userEntity.getId());
         userDto.setEmail(userEntity.getEmail());
         userDto.setFirstName(userEntity.getFirstName());
         userDto.setSecondName(userEntity.getSecondName());

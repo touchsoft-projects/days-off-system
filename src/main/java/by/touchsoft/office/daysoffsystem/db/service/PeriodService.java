@@ -53,18 +53,18 @@ public class PeriodService {
         return false;
     }
 
-    public boolean addPeriodByEmail(PeriodDto periodDto, String email) {
+    public String addPeriodByEmail(PeriodDto periodDto, String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity != null) {
             String userId = userEntity.getId();
             if (Objects.equals(userId, periodDto.getUserId())) {
                 PeriodEntity periodEntity = new PeriodEntity();
                 copyToEntity(periodDto, periodEntity);
-                periodRepository.save(periodEntity);
-                return true;
+                periodEntity = periodRepository.save(periodEntity);
+                return periodEntity.getId();
             }
         }
-        return false;
+        return null;
     }
 
     public boolean updatePeriodByEmail(PeriodDto periodDto, String email) {

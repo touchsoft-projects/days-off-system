@@ -5,6 +5,7 @@ import by.touchsoft.office.daysoffsystem.db.repository.dto.UserDto;
 import by.touchsoft.office.daysoffsystem.db.repository.dto.UserPasswordDto;
 import by.touchsoft.office.daysoffsystem.db.service.PeriodService;
 import by.touchsoft.office.daysoffsystem.db.service.UserService;
+
 import com.google.common.collect.ImmutableList;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,17 @@ public class AdminController {
         periodService.deleteById(id);
         logger.info("Period was deleted:id=" + id);
         return ResponseEntity.ok().build();
+    }
+    
+    @GetMapping("/getPeriodsByUserId")
+    public ResponseEntity<List<PeriodDto>> getPeriodsByUserId(@RequestParam String id) {
+        List<PeriodDto> periodDtos = null;
+        if (id != null) {
+        	periodDtos = periodService.getByUserId(id);
+        	return ResponseEntity.ok(periodDtos);
+        } else {
+        	return ResponseEntity.badRequest().build();
+        }
     }
 
     @Autowired

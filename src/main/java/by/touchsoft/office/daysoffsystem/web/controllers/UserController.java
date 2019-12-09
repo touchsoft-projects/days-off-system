@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,20 +63,20 @@ public class UserController {
             return ResponseEntity.badRequest().build();
         }
     }
-
+    
     @PostMapping("/addPeriod")
-    public ResponseEntity<PeriodDto> addPeriod(@RequestBody PeriodDto periodDto) {
-        boolean result = periodService.addPeriodByEmail(periodDto, SecurityHelper.getUserName());
-        if (result) {
+    public ResponseEntity<String> addPeriod(@RequestBody PeriodDto periodDto) {
+        String id = periodService.addPeriodByEmail(periodDto, SecurityHelper.getUserName());
+        if (id != null) {
             logger.info("Period was added:" + periodDto);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(id);
         } else {
             logger.warn("Bad request:" + periodDto);
             return ResponseEntity.badRequest().build();
         }
     }
 
-    @PostMapping("/updatePeriod")
+    @PutMapping("/updatePeriod")
     public ResponseEntity<PeriodDto> updatePeriod(@RequestBody PeriodDto periodDto) {
         boolean result = periodService.updatePeriodByEmail(periodDto, SecurityHelper.getUserName());
         if (result) {
@@ -86,13 +88,26 @@ public class UserController {
         }
     }
 
-    @PostMapping("/deletePeriodById")
-    //TODO
+    @DeleteMapping("/deletePeriodById")
     public ResponseEntity<PeriodDto> deletePeriodById(@RequestParam String id) {
         logger.info("Period was deleted:id=" + id);
+        periodService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
+    
+    @GetMapping("/getPeriods")
+    public ResponseEntity<List<PeriodDto>> getPeriods() {
+        String id = userService.getIdByEmail(SecurityHelper.getUserName());
+        List<PeriodDto> periodDtos = null;
+        if (id != null) {
+        	periodDtos = periodService.getByUserId(id);
+        	return ResponseEntity.ok(periodDtos);
+        } else {
+        	return ResponseEntity.badRequest().build();
+        }
+    }
+    
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
