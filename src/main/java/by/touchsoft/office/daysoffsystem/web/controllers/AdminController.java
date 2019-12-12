@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,7 +40,7 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/updateUser")
+    @PutMapping("/updateUser")
     public ResponseEntity<Void> updateUser(@RequestBody UserDto userDto) {
         userService.updateUser(userDto);
         logger.info("User was updated:" + userDto);
@@ -81,7 +83,7 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/updatePeriod")
+    @PutMapping("/updatePeriod")
     public ResponseEntity<Void> updatePeriod(@RequestBody PeriodDto periodDto) {
         boolean result = periodService.updateAnyPeriod(periodDto);
         if (result) {
@@ -93,7 +95,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/deletePeriodById")
+    @DeleteMapping("/deletePeriodById")
     public ResponseEntity<Void> deletePeriodById(@RequestParam String id) {
         periodService.deleteById(id);
         logger.info("Period was deleted:id=" + id);

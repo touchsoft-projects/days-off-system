@@ -114,6 +114,7 @@ public class UserService {
         userDto.setEnabled(userEntity.isEnabled());
         userDto.setPassportId(userEntity.getPassportId());
         userDto.setRoles(userEntity.getRoles());
+		userDto.setPassword(userEntity.getPassword());
         return userDto;
     }
 }

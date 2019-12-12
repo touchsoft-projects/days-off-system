@@ -113,20 +113,33 @@
 
 
 	<script>
-		var apiGetUser = Vue.resource("api/v1/user/getUser");
-		var apiGetPeriods = Vue.resource("api/v1/user/getPeriods");
-		var apiDeletePeriod = Vue.resource("api/v1/user/deletePeriodById");
-		var apiAddPeriod = Vue.resource("api/v1/user/addPeriod");
-		var apiUpdatePeriod = Vue.resource("api/v1/user/updatePeriod");
+		var urlUserApiGetUser = "api/v1/user/getUser";
+		var urlUserApiGetPeriods = "api/v1/user/getPeriods";
+		var urlUserApiAddPeriod = "api/v1/user/addPeriod";
+		var urlUserApiUpdatePeriod = "api/v1/user/updatePeriod";
+		var urlUserApiDeletePeriod = "api/v1/user/deletePeriodById";
+		var apiGetUser = Vue.resource(urlUserApiGetUser);
+		var apiGetPeriods = Vue.resource(urlUserApiGetPeriods);
+		var apiAddPeriod = Vue.resource(urlUserApiAddPeriod);
+		var apiUpdatePeriod = Vue.resource(urlUserApiUpdatePeriod);
+		var apiDeletePeriod = Vue.resource(urlUserApiDeletePeriod);
 
-		var apiAdminAddUser = Vue.resource("api/v1/admin/addUser");
-		var apiAdminUpdateUser = Vue.resource("api/v1/admin/UpdateUser");
-		var apiAdminGetUserById = Vue.resource("api/v1/admin/getUserById");
-		var apiAdminGetAll = Vue.resource("api/v1/admin/getAll");
-		var apiAdminGetPeriodsByUserId = Vue.resource("api/v1/admin/getPeriodsByUserId");
-		var apiAdminAddPeriod = Vue.resource("api/v1/admin/addPeriod");
-		var apiAdminUpdatePeriod = Vue.resource("api/v1/admin/updatePeriod");
-		var apiAdminDeletePeriodById = Vue.resource("api/v1/admin/deletePeriodById");
+		var urlAdminApiAddUser = "api/v1/admin/addUser";
+		var urlAdminApiUpdateUser = "api/v1/admin/updateUser";
+		var urlAdminApiGetUser = "api/v1/admin/getUserById";
+		var urlAdminApiGetAll = "api/v1/admin/getAll";
+		var urlAdminApiGetPeriods = "api/v1/admin/getPeriodsByUserId";
+		var urlAdminApiAddPeriod = "api/v1/admin/addPeriod";
+		var urlAdminApiUpdatePeriod = "api/v1/admin/updatePeriod";
+		var urlAdminApiDeletePeriod = "api/v1/admin/deletePeriodById";
+		var apiAdminAddUser = Vue.resource(urlAdminApiAddUser);
+		var apiAdminUpdateUser = Vue.resource(urlAdminApiUpdateUser);
+		var apiAdminGetUserById = Vue.resource(urlAdminApiGetUser);
+		var apiAdminGetAll = Vue.resource(urlAdminApiGetAll);
+		var apiAdminGetPeriodsByUserId = Vue.resource(urlAdminApiGetPeriods);
+		var apiAdminAddPeriod = Vue.resource(urlAdminApiAddPeriod);
+		var apiAdminUpdatePeriod = Vue.resource(urlAdminApiUpdatePeriod);
+		var apiAdminDeletePeriodById = Vue.resource(urlAdminApiDeletePeriod);
 		var user = {};
 
 		getUserInfo();
@@ -138,18 +151,26 @@
 			},
 			{
 				name: 'Periods',
-				component: 'periods'
+				component: 'periods-wrap'
 			},
 			{
 				name: 'AddPeriod',
-				component: 'add-period'
+				component: 'add-period-wrap'
 			}
 		]
 
 		var tabsAdmin = [
 			{
 				name: 'AddUser',
-				component: 'add-user'
+				component: 'add-user-wrap'
+			},
+			{
+				name: 'GetUser',
+				component: 'get-user-wrap'
+			},
+			{
+				name: 'GetUsers',
+				component: 'get-users-wrap'
 			},
 		]
 
@@ -159,13 +180,13 @@
 					user: user,
 				};
 			},
-			template: '<div id="top">' +
+			template:
+					'<div id="top">' +
 						'<div id="inTop">' +
 							'<span>{{ user.firstName }}</span>' +
 							'<a href="logout">logout</a>' +
 						'</div>' +
-					  '</div>',
-
+					'</div>',
 		});
 
 		Vue.component('info', {
@@ -174,12 +195,13 @@
 					user: user,
 				};
 			},
-			template: '<div id="right">' +
-					'<table class="table">' +
-					'<tr><td>Name</td><td><p>{{ fullName }}</p></td></tr>' +
-					'<tr><td>Email</td><td><p>{{ user.email }}</p></td></tr>' +
-					'<tr><td>Passport Id</td><td><p>{{ user.passportId }}</p></td></tr>' +
-					'</table>' +
+			template:
+					'<div id="right">' +
+						'<table class="table">' +
+							'<tr><td>Name</td><td><p>{{ fullName }}</p></td></tr>' +
+							'<tr><td>Email</td><td><p>{{ user.email }}</p></td></tr>' +
+							'<tr><td>Passport Id</td><td><p>{{ user.passportId }}</p></td></tr>' +
+						'</table>' +
 					'</div>',
 			computed: {
 				fullName: function(){
@@ -189,18 +211,38 @@
 
 		});
 
+		Vue.component('periods-wrap', {
+			data: function() {
+				return {
+					userId: user.id,
+					urlApiGet: urlUserApiGetPeriods,
+					urlApiUpdate: urlUserApiUpdatePeriod,
+					urlApiDelete: urlUserApiDeletePeriod,
+				};
+			},
+			template:
+					'<div id="right">' +
+						'<periods ' +
+							':userId="userId" ' +
+							':urlApiGet="urlApiGet" ' +
+							':urlApiUpdate="urlApiUpdate" ' +
+							':urlApiDelete="urlApiDelete"/>' +
+					'</div>',
+		});
+
 		Vue.component('periods', {
+		    props: ["userId", "urlApiGet", "urlApiUpdate", "urlApiDelete"],
 			data: function() {
 				return {
 					periods: [],
-					isEdited: false,
+					isEditedPeriod: false,
 					period: {},
 					indexEditedPeriod: 0,
 					message: "",
 					isShowMessage: false,
 				};
 			},
-			template: '<div id="right">' +
+			template: '<div>' +
 						'<table>' +
 							'<tr>' +
 								'<th>&#8470</th>' + /*sybmol №*/
@@ -217,25 +259,20 @@
 								'<td><input type="button" value="Delete" @click="del(period)" /></td>' +
 							'</tr>' +
 						'</table>' +
-						'<div v-show="isEdited">' +
-							'<p>Edited Period &#8470 {{ indexEditedPeriod }}</p>' +
-							'<label>Start Date</label>' +
-							'<input type="date" v-model="period.startDate"/>' +
-							'<label>End Date</label>' +
-							'<input type="date" v-model="period.endDate"/>' +
-							'<label>Period Type</label>' +
-							'<select v-model="period.periodType">' +
-								'<option value="VACATION">Vacation</option>' +
-								'<option value="DAY_OFF">Day off</option>' +
-							'</select>' +
-							'<td><input type="button" value="Save" @click="saveEdited()"/></td>' +
-					    '</div>' +
+						'<p v-if="isEditedPeriod">&#8470{{ indexEditedPeriod }}</p>' +
+						'<div v-if="isEditedPeriod">' +
+							'<add-edit-period ' +
+								':isNewPeriod="false" ' +
+								':editedPeriod="period" ' +
+								'v-on:update-period="saveEdited"/>' +
+						'</div>' +
 						'<div v-show="isShowMessage">' +
 							'<p>{{ message }}</p>' +
 						'</div>' +
 					'</div>',
 			created: function() {
-				apiGetPeriods.get().then(result =>
+				var apiGet = Vue.resource(this.urlApiGet);
+				apiGet.get({id: this.userId}).then(result =>
 						result.json().then(data =>
 							data.forEach(period => this.periods.push(period))
 						)
@@ -245,26 +282,359 @@
 				edit: function(period, number) {
 				    this.indexEditedPeriod = number;
 					this.hideMessage();
-					this.isEdited = true;
+					this.isEditedPeriod = false;
 					this.period = Object.assign({}, period);
+					setTimeout(() => this.isEditedPeriod = true, 0);
 				},
 
-				saveEdited: function() {
+				saveEdited: function(period) {
+					this.period = Object.assign({}, period);
 					index = getIndex(this.periods, this.period.id);
 					if (index > -1) {
-					    // this.period.userId = user.id;
-						apiUpdatePeriod.update(this.period).then(result => {
+						var apiUpdate = Vue.resource(this.urlApiUpdate);
+						apiUpdate.update(this.period).then(result => {
 							if (result.ok) {
 								this.periods[index] = this.period;
-								this.isEdited = false;
+								this.isEditedPeriod = false;
 								this.period = {};
 							}
 						})
 						this.showMessage("Changing saved!");
 					} else {
 						this.showMessage("Changing don't save!");
-						this.isEdited = false;
+						this.isEditedPeriod = false;
 					}
+				},
+
+				del: function(period) {
+					var apiDelete = Vue.resource(this.urlApiDelete);
+					apiDelete.remove({id: period.id}).then(result => {
+						if (result.ok) {
+							this.periods.splice(this.periods.indexOf(period), 1)
+						}
+						this.isShowMessage = false;
+					})
+				},
+
+				showMessage: function(message) {
+					this.message = message;
+					this.isShowMessage = true;
+				},
+
+				hideMessage: function() {
+					this.message = "";
+					this.isShowMessage = false;
+				},
+			}
+		});
+
+		Vue.component('add-period-wrap', {
+			data: function() {
+				return {
+					isNewPeriod: true,
+				    period: {
+				        userId: user.id,
+					},
+					urlUserApiAddPeriod: urlUserApiAddPeriod,
+				};
+			},
+			template:
+					'<div id="right">' +
+						'<add-edit-period ' +
+							':isNewPeriod="isNewPeriod" ' +
+							':editedPeriod="period" ' +
+							':urlApiSave="urlUserApiAddPeriod"/>' +
+					'</div>',
+		});
+
+		Vue.component('add-edit-period', {
+			props: ["isNewPeriod", "editedPeriod", "urlApiSave"],
+			data: function() {
+				return {
+					period: {},
+					message: "",
+					isShowMessage: false,
+				};
+			},
+			template:
+					'<div>' +
+						'<div>' +
+							'<table class="table">' +
+								'<tr><td>Start Date</td><td><input type="date" v-model="period.startDate" key="start-date"/></td></tr>' +
+								'<tr><td>End Date</td><td><input type="date" v-model="period.endDate" key="end-date"/></td></tr>' +
+								'<tr><td>Period Type</td><td>' +
+									'<select v-model="period.periodType" key="period-type">' +
+									'<option value="VACATION">Vacation</option>' +
+									'<option value="DAY_OFF">Day off</option>' +
+									'</select>' +
+								'</td></tr>' +
+							'</table>' +
+							'<input type="button" value="Save" @click="isNewPeriod ? save() : update()"/>' +
+						'</div>' +
+						'<div v-show="isShowMessage">' +
+							'<p>{{ message }}</p>' +
+						'</div>' +
+					'</div>',
+			created: function() {
+				this.period = Object.assign({}, this.editedPeriod);
+			},
+			methods: {
+				save: function() {
+					var apiSave = Vue.resource(this.urlApiSave);
+					apiSave.save(this.period).then(result => {
+						if (result.ok) {
+							this.showMessage("Period was added!");
+						} else {
+							this.showMessage("Period wasn't added!");
+						}
+					})
+				},
+
+				update: function() {
+					console.log("update period");
+					this.$emit('update-period', this.period);
+				},
+
+				showMessage: function(message) {
+					this.message = message;
+					this.isShowMessage = true;
+				},
+
+				hideMessage: function() {
+					this.message = "";
+					this.isShowMessage = false;
+				},
+			},
+
+		});
+
+		Vue.component('add-user-wrap', {
+			data: function() {
+				return {
+					isNewUser: true,
+				};
+			},
+			template:
+					'<div id="right">' +
+						'<add-edit-user :isNewUser="isNewUser"/>' +
+					'</div>',
+		});
+
+		Vue.component('add-edit-user', {
+		    props: ["isNewUser", "editedUser"],
+			data: function() {
+				return {
+					user: {
+					    roles: [ "" ]
+					},
+					message: "",
+					isShowMessage: false,
+				};
+			},
+			template:
+					'<div>' +
+						'<div>' +
+							'<table class="table">' +
+								'<tr><td>First Name</td><td><input type="text" v-model="user.firstName"/></td></tr>' +
+								'<tr><td>Second Name</td><td><input type="text" v-model="user.secondName"/></td></tr>' +
+								'<tr><td>Last Name</td><td><input type="text" v-model="user.lastName"/></td></tr>' +
+								'<tr><td>Passport Id</td><td><input type="text" v-model="user.passportId"/></td></tr>' +
+								'<tr><td>Email</td><td><input type="text" v-model="user.email"/></td></tr>' +
+								'<tr><td>Password</td><td><input type="text" v-model="user.password"/></td></tr>' +
+								'<tr><td>Role</td><td>' +
+									'<select v-model="user.roles[0]">' +
+										'<option value="ROLE_EMPLOYEE">Employee</option>' +
+										'<option value="ROLE_ADMIN">Admin</option>' +
+									'</select></td></tr>' +
+								'<tr><td>Enabled</td><td><input type="checkbox" v-model="user.enabled"/></td></tr>' +
+							'</table>' +
+							'<input type="button" value="Save" @click="isNewUser ? save() : update()"/>' +
+						'</div>' +
+						'<div v-show="isShowMessage">' +
+							'<p>{{ message }}</p>' +
+						'</div>' +
+					'</div>',
+			created: function() {
+		        if (!this.isNewUser) {
+					this.user = Object.assign({}, this.editedUser);
+				}
+			},
+			methods: {
+				save: function() {
+				    console.log("save");
+					apiAdminAddUser.save(this.user).then(result => {
+						if (result.ok) {
+							this.showMessage("User was added!");
+						} else {
+							this.showMessage("User wasn't added!");
+						}
+					})
+				},
+
+				update: function() {
+					console.log("update");
+					this.$emit('update-user', this.user);
+				},
+
+				showMessage: function(message) {
+					this.message = message;
+					this.isShowMessage = true;
+				},
+
+				hideMessage: function() {
+					this.message = "";
+					this.isShowMessage = false;
+				},
+			},
+
+		});
+
+		Vue.component('get-user-wrap', {
+			data: function() {
+				return {
+					users: [],
+					isSearched: false,
+					id: "",
+				};
+			},
+			template:
+					'<div id="right">' +
+						'<div>' +
+							'<input type="text" v-model="id"/>' +
+							'<input type="button" value="Search" @click="searchUser" />' +
+						'</div>' +
+						'<users v-show="isSearched" :users="users"/>' +
+					'</div>',
+			methods: {
+			    searchUser: function() {
+			        this.users.length = 0;
+					apiAdminGetUserById.get({id: this.id}).then(result => {
+						result.json().then(data => {
+							if (data.length > 0) {
+								this.users.push(data[0]);
+								this.isSearched = true;
+							} else {
+								this.isSearched = false;
+							}
+						})
+					})
+				}
+			}
+		});
+
+		Vue.component('get-users-wrap', {
+			data: function() {
+				return {
+					users: [],
+				};
+			},
+			template:
+					'<div id="right">' +
+						'<users :users="users"/>' +
+					'</div>',
+			created: function() {
+				apiAdminGetAll.get().then(result =>
+						result.json().then(data =>
+								data.forEach(user => this.users.push(user))
+						)
+				)
+			},
+		});
+
+		Vue.component('users', {
+		    props: ["users"],
+			data: function() {
+				return {
+					periods: [],
+					isEditedUser: false,
+					user: {
+						roles: [ "" ],
+					},
+					indexEditedUser: 0,
+					message: "",
+					isShowMessage: false,
+					isShowPeriods: false,
+					isShowButtonPeriods: false,
+					urlApiGet: urlAdminApiGetPeriods,
+					urlApiUpdate: urlAdminApiUpdatePeriod,
+					urlApiDelete: urlAdminApiDeletePeriod,
+				};
+			},
+			template:
+					'<div>' +
+						'<div>' +
+							'<table>' +
+								'<tr>' +
+									'<th v-show="users.length > 1 ? true : false">&#8470</th>' + /*sybmol №*/
+									'<th>Id</th>' +
+									'<th>First Name</th>' +
+									'<th>Second Name</th>' +
+									'<th>Last Name</th>' +
+									'<th>Email</th>' + /*sybmol №*/
+									'<th>Passport Id</th>' +
+									'<th>Roles</th>' +
+									'<th>Enabled</th>' +
+								'</tr>' +
+								'<tr v-for="(user, index) in users" :key="user.id">' +
+									'<td v-show="users.length > 1 ? true : false">{{ index + 1 }}</td>' +
+									'<td>{{ user.id }}</td>' +
+									'<td>{{ user.firstName }}</td>' +
+									'<td>{{ user.secondName }}</td>' +
+									'<td>{{ user.lastName }}</td>' +
+									'<td>{{ user.email }}</td>' +
+									'<td>{{ user.passportId }}</td>' +
+									'<td>{{ user.roles[0] }}</td>' +
+									'<td>{{ user.enabled }}</td>' +
+									'<td><input type="button" value="Edit" @click="edit(user, index + 1)" /></td>' +
+									'<td><input type="button" value="Delete" @click="del(user)" /></td>' +
+								'</tr>' +
+							'</table>' +
+						'</div>' +
+						'<div v-if="isEditedUser">' +
+							'<add-edit-user :isNewUser="false" :editedUser="user" v-on:update-user="saveEdited"/>' +
+						'</div>' +
+						'<input type="button" value="ShowPeriods" @click="show" v-if="isShowButtonPeriods"/>' +
+						'<periods ' +
+							'v-if="isShowPeriods" ' +
+							':userId="user.id" ' +
+							':urlApiGet="urlApiGet" ' +
+							':urlApiUpdate="urlApiUpdate" ' +
+							':urlApiDelete="urlApiDelete"/>' +
+					'</div>',
+			methods: {
+				show: function() {
+					this.isShowPeriods = true;
+				},
+
+				edit: function(user, number) {
+					this.indexEditedUser = number;
+					this.hideMessage();
+					this.isEditedUser = false;
+					this.user = Object.assign({}, user);
+					setTimeout(() => this.isEditedUser = true, 0);
+					this.isShowPeriods = false;
+					this.isShowButtonPeriods = true;
+				},
+
+				saveEdited: function(user) {
+					this.user = Object.assign({}, user);
+					index = getIndex(this.users, this.user.id);
+					if (index > -1) {
+						apiAdminUpdateUser.update(this.user).then(result => {
+							if (result.ok) {
+								this.users[index] = this.user;
+								this.isEditedUser = false;
+								this.user = {};
+							}
+						})
+						this.showMessage("Changing saved!");
+					} else {
+						this.showMessage("Changing don't save!");
+						this.isEditedUser = false;
+					}
+					console.log(user);
+					this.isShowButtonPeriods = false;
+					this.isShowPeriods = false;
 				},
 
 				del: function(period) {
@@ -286,118 +656,6 @@
 					this.isShowMessage = false;
 				},
 			}
-		});
-
-		Vue.component('add-period', {
-			data: function() {
-				return {
-					period: {},
-					message: "",
-					isShowMessage: false,
-				};
-			},
-			template:
-					'<div>' +
-						'<div>' +
-							'<label>Start Date</label>' +
-							'<input type="date" v-model="period.startDate"/>' +
-							'<label>End Date</label>' +
-							'<input type="date" v-model="period.endDate"/>' +
-							'<label>Period Type</label>' +
-							'<select v-model="period.periodType">' +
-								'<option value="VACATION">Vacation</option>' +
-								'<option value="DAY_OFF">Day off</option>' +
-							'</select>' +
-							'<td><input type="button" value="Save" @click="save"/></td>' +
-						'</div>' +
-						'<div v-show="isShowMessage">' +
-							'<p>{{ message }}</p>' +
-						'</div>' +
-					'</div>',
-			methods: {
-				save: function() {
-					this.period.userId = user.id;
-					apiAddPeriod.save(this.period).then(result => {
-						if (result.ok) {
-							result.json().then(id => {
-								this.period.id = id;
-							})
-							this.showMessage("Period was added!");
-						} else {
-							this.showMessage("Period wasn't added!");
-						}
-					})
-				},
-
-				showMessage: function(message) {
-					this.message = message;
-					this.isShowMessage = true;
-				},
-
-				hideMessage: function() {
-					this.message = "";
-					this.isShowMessage = false;
-				},
-			},
-
-		});
-
-		Vue.component('add-user', {
-			data: function() {
-				return {
-					user: {
-					    roles: [ "" ]
-					},
-					message: "",
-					isShowMessage: false,
-					t: "checkbox",
-				};
-			},
-			template:
-					'<div>' +
-						'<div>' +
-							'<table class="table">' +
-								'<tr><td>First Name</td><td><input type="text" v-model="user.firstName"/></td></tr>' +
-								'<tr><td>Second Name</td><td><input type="text" v-model="user.secondName"/></td></tr>' +
-								'<tr><td>Last Name</td><td><input type="text" v-model="user.lastName"/></td></tr>' +
-								'<tr><td>Passport Id</td><td><input type="text" v-model="user.passportId"/></td></tr>' +
-								'<tr><td>Email</td><td><input type="text" v-model="user.email"/></td></tr>' +
-								'<tr><td>Password</td><td><input type="text" v-model="user.password"/></td></tr>' +
-								'<tr><td>Role</td><td>' +
-									'<select v-model="user.roles[0]">' +
-										'<option value="ROLE_EMPLOYEE">Employee</option>' +
-										'<option value="ROLE_ADMIN">Admin</option>' +
-									'</select></td></tr>' +
-								'<tr><td>Enabled</td><td><input type="checkbox" v-model="user.enabled"/></td></tr>' +
-							'</table>' +
-							'<input type="button" value="Save" @click="save"/>' +
-						'</div>' +
-						'<div v-show="isShowMessage">' +
-							'<p>{{ message }}</p>' +
-						'</div>' +
-					'</div>',
-			methods: {
-				save: function() {
-					apiAdminAddUser.save(this.user).then(result => {
-						if (result.ok) {
-							this.showMessage("User was added!");
-						} else {
-							this.showMessage("User wasn't added!");
-						}
-					})
-				},
-
-				showMessage: function(message) {
-					this.message = message;
-					this.isShowMessage = true;
-				},
-
-				hideMessage: function() {
-					this.message = "";
-					this.isShowMessage = false;
-				},
-			},
-
 		});
 
 
