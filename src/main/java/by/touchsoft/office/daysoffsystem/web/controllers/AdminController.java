@@ -46,10 +46,10 @@ public class AdminController {
         logger.info("User was updated:" + userDto);
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/getUserById")
-    public ResponseEntity<List<UserDto>> getUserById(@RequestParam String id) {
-        UserDto userDto = userService.getUserById(id);
+    
+    @GetMapping("/getUserByEmail")
+    public ResponseEntity<List<UserDto>> getUserByEmail(@RequestParam String email) {
+        UserDto userDto = userService.getUserByEmail(email);
         List<UserDto> result = ImmutableList.of();
         if (userDto != null) {
             result = ImmutableList.of(userDto);
@@ -75,12 +75,24 @@ public class AdminController {
             return ResponseEntity.badRequest().build();
         }
     }
+    
+    @DeleteMapping("/deleteUserById")
+    public ResponseEntity<Void> deleteUserById(@RequestParam String id) {
+        userService.deleteById(id);
+        logger.info("User was deleted:id=" + id);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/addPeriod")
-    public ResponseEntity<Void> addPeriod(@RequestBody PeriodDto periodDto) {
-        periodService.addAnyPeriod(periodDto);
-        logger.info("Period was added:" + periodDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> addPeriod(@RequestBody PeriodDto periodDto) {
+        String id = periodService.addAnyPeriod(periodDto);
+        if (id != null) {
+            logger.info("Period was added:" + periodDto);
+            return ResponseEntity.ok(id);
+        } else {
+            logger.warn("Bad request:" + periodDto);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PutMapping("/updatePeriod")

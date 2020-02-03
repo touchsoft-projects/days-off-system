@@ -35,11 +35,11 @@ public class PeriodService {
     public PeriodService() {
     }
 
-    public boolean addAnyPeriod(PeriodDto periodDto) {
+    public String addAnyPeriod(PeriodDto periodDto) {
         PeriodEntity periodEntity = new PeriodEntity();
         copyToEntity(periodDto, periodEntity);
-        periodRepository.save(periodEntity);
-        return true;
+        periodEntity = periodRepository.save(periodEntity);
+        return periodEntity.getId();
     }
 
     public boolean updateAnyPeriod(PeriodDto periodDto) {

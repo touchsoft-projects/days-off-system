@@ -71,6 +71,10 @@ public class UserService {
         copyToEntity(userDto, userEntity);
     }
     
+    public void deleteById(final String id) {
+        userRepository.deleteById(id);
+    }
+    
     public String getIdByEmail(String email) {
     	UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity != null) {
