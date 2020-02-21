@@ -2,6 +2,9 @@ package by.touchsoft.office.daysoffsystem.db.repository.dto;
 
 import by.touchsoft.office.daysoffsystem.db.repository.entity.PeriodEntity;
 import by.touchsoft.office.daysoffsystem.enumerations.PeriodType;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * This class is used to interact with view and hides unwanted data of {@link PeriodEntity} entity.
@@ -9,9 +12,19 @@ import by.touchsoft.office.daysoffsystem.enumerations.PeriodType;
 public class PeriodDto {
 
     private String id;
+
+    @NotBlank(message = "Field cannot be empty")
     private String userId;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotBlank(message = "Field cannot be empty")
     private String startDate;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotBlank(message = "Field cannot be empty")
     private String endDate;
+
+    @NotBlank(message = "Field cannot be empty")
     private PeriodType periodType;
 
     public String getId() {

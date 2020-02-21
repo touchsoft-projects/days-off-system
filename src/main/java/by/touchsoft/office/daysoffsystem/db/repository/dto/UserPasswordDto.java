@@ -1,10 +1,17 @@
 package by.touchsoft.office.daysoffsystem.db.repository.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 public class UserPasswordDto {
 
+    @Email(message = "Enter valid email")
+    @NotBlank(message = "Field cannot be empty")
     private String email;
-    private String password;
 
+    @Size(min=6, message = "Password must be longer than 6 symbols")
+    private String password;
 
     public String getEmail() {
         return email;

@@ -32,7 +32,11 @@ public class UserService {
 
     public void addUser(UserDto userDto) {
         UserEntity userEntity = new UserEntity();
+        String encodedPassword = passwordEncoder.encode(userDto.getPassword());
+
         copyToEntity(userDto, userEntity);
+        userEntity.setPassword(encodedPassword);
+
         userRepository.save(userEntity);
     }
 
@@ -71,6 +75,10 @@ public class UserService {
         copyToEntity(userDto, userEntity);
     }
 
+    public void deleteById(final String id) {
+        userRepository.deleteById(id);
+    }
+
     /**
      * This method updates the password.
      */
@@ -97,6 +105,7 @@ public class UserService {
     private UserDto toDto(UserEntity userEntity) {
         UserDto userDto = new UserDto();
 
+        userDto.setId(userEntity.getId());
         userDto.setEmail(userEntity.getEmail());
         userDto.setFirstName(userEntity.getFirstName());
         userDto.setSecondName(userEntity.getSecondName());
@@ -104,6 +113,7 @@ public class UserService {
         userDto.setEnabled(userEntity.isEnabled());
         userDto.setPassportId(userEntity.getPassportId());
         userDto.setRoles(userEntity.getRoles());
+//        userDto.setPeriods(userEntity.getPeriodDtos());
         return userDto;
     }
 }

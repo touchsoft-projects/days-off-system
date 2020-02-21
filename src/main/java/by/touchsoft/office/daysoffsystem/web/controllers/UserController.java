@@ -10,6 +10,7 @@ import com.google.common.collect.ImmutableList;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping("/updatePassword")
-    public ResponseEntity<String> updatePassword(
+    public ResponseEntity<Void> updatePassword(
             @RequestBody UserPasswordDto userPasswordDto
     ) {
         boolean result = false;
@@ -63,7 +64,7 @@ public class UserController {
     }
 
     @PostMapping("/addPeriod")
-    public ResponseEntity<PeriodDto> addPeriod(@RequestBody PeriodDto periodDto) {
+    public ResponseEntity<Void> addPeriod(@RequestBody PeriodDto periodDto) {
         boolean result = periodService.addPeriodByEmail(periodDto, SecurityHelper.getUserName());
         if (result) {
             logger.info("Period was added:" + periodDto);
@@ -87,8 +88,14 @@ public class UserController {
     }
 
     @PostMapping("/deletePeriodById")
-    //TODO
-    public ResponseEntity<PeriodDto> deletePeriodById(@RequestParam String id) {
+    public ResponseEntity<Void> deletePeriodById(@RequestParam String id) {
+        String principalUserName = SecurityHelper.getUserName();
+        if (principalUserName != null) {
+            UserDto userDto = userService.getUserByEmail(principalUserName);
+            if (userDto != null) {
+                periodService.deleteById(id);
+            }
+        }
         logger.info("Period was deleted:id=" + id);
         return ResponseEntity.ok().build();
     }
@@ -102,4 +109,5 @@ public class UserController {
     public void setPeriodService(PeriodService periodService) {
         this.periodService = periodService;
     }
+
 }
