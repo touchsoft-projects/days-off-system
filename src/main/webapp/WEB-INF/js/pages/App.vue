@@ -1,20 +1,22 @@
 <template>
      <div>
         <top-element>
-                <span id="userName" slot="userFirstName">{{ user.firstName }}</span>
+            <span id="userName" slot="userFirstName">{{ user.firstName }}</span>
         </top-element>
         <div id="side">
-            <router-link 
+            <button
                 v-for="tab in tabs"
-                :key="tab.link"
-                :to="tab.name"
-                tag="button" 
-                class="tab-button" 
-            >{{ tab.title }}
-            </router-link>
+                v-bind:key="tab.name"
+                v-bind:class="['tab-button', { active: currentTab.name === tab.name }]"
+                v-on:click="switchTab(tab)">
+                {{ tab.name }}
+            </button>
         </div>
         <div id="content">
-            <router-view></router-view>
+            <component 
+                v-bind:is="currentTab.component"
+                class="tab"
+            ></component>
         </div>
     </div>
 </template>
@@ -26,48 +28,53 @@
     }
 
     import TopElement from 'components/TopElement.vue'
+    import Info from 'components/Info.vue'
+    import Periods from 'components/periods/Periods.vue'
+    import AddPeriod from 'components/periods/AddPeriod.vue'
+    import AddUser from 'components/users/AddUser.vue'
+    import UserWrap from 'components/wraps/UserWrap.vue'
+    import UsersWrap from 'components/wraps/UsersWrap.vue'
+    import { EventBus } from 'EventBus.js'
     import {mapGetters} from 'vuex'
     export default {
         components: {
-            TopElement,
+            TopElement, Info, Periods, AddPeriod, AddUser, UserWrap, UsersWrap
         },
         data() {
             return {
                 user: {},
                 profile: '',
+                currentTab: {},
                 tabs: {},
                 tabsEmployee: [
                     {
-                        title: 'Info',
-                        link: addBaseUrl('/info'),
-                        name: 'info'
+                        name: 'Info',
+                        component: 'Info'
                     },
                     {
-                        title: 'Periods',
-                        link: addBaseUrl('/periods'),
-                        name: 'periods'
+                        name: 'Periods',
+                        component: 'Periods',
+                        updatable: true
                     },
                     {
-                        title: 'AddPeriod',
-                        link: addBaseUrl('/addPeriod'),
-                        name: 'addPeriod'
+                        name: 'AddPeriod',
+                        component: 'AddPeriod'
                     }
                 ],
                 tabsAdmin: [
                     {
-                        title: 'AddUser',
-                        link: addBaseUrl('/addUser'),
-                        name: 'addUser'
+                        name: 'AddUser',
+                        component: 'AddUser'
                     },
                     {
-                        title: 'GetUser',
-                        link: addBaseUrl('/getUser'),
-                        name: 'getUser'
+                        name: 'User',
+                        component: 'UserWrap',
+                        updatable: true
                     },
                     {
-                        title: 'GetUsers',
-                        link: addBaseUrl('/getUsers'),
-                        name: 'getUsers'
+                        name: 'Users',
+                        component: 'UsersWrap',
+                        updatable: true
                     },
                 ],
             }
@@ -94,9 +101,19 @@
                 } else {
                     this.tabs = this.tabsAdmin
                 }
-        	}
+        	},
+            switchTab(tab) {
+                if (this.currentTab.name === tab.name && this.currentTab.updatable) {
+                    if (this.currentTab.name === 'User') {
+                        EventBus.$emit('update-data')
+                    } else {
+                        this.currentTab = {}
+                    }
+                }
+                setTimeout(() => this.currentTab = tab, 20)
+            },
         },
     }
-</script scoped>
+</script>
 
 <style src='styles/app.css'></style>
