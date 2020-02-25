@@ -2,8 +2,7 @@
 	<div class="parent">
 		<div v-if="isEditedPeriod" class="rightColumn">
 			<p id="labelPeriodNumber">Edited period № {{ indexEditedPeriod }}</p>
-			<edit-period
-				v-on:update-period="update">
+			<edit-period v-on:update-period="updatePeriod">
 				<input type="date" v-model="period.startDate" key="start-date" slot="startDate">
 					{{ period.startDate }}
 				</input>
@@ -47,6 +46,7 @@
 	import { mapGetters } from 'vuex'
 	import * as MESSAGES from 'constants/messages.js'
 	import {DAY_OFF, VACATION} from 'constants/common.js'
+	import { EventBus } from 'EventBus.js'
 	export default {
 		components: {
 			EditPeriod,
@@ -61,13 +61,7 @@
 			}
 		},
 		mounted() {
-			if (this.isAdmin()) {
-				this.$store.dispatch("adminStore/getPeriodsAction", {
-					userId: this.userId,
-				})
-			} else {
-				this.$store.dispatch("userStore/getPeriodsAction")
-			}
+			this.fetchData()
 		},
 		computed: {
 			periods() {
@@ -82,6 +76,15 @@
             },
 		},
 		methods: {
+			fetchData() {
+				if (this.isAdmin()) {
+					this.$store.dispatch("adminStore/getPeriodsAction", {
+						userId: this.userId,
+					})
+				} else {
+					this.$store.dispatch("userStore/getPeriodsAction")
+				}
+			},
 			getPeriodType(periodType) {
 				switch(periodType) {
 					case DAY_OFF: return 'Day off';
@@ -94,7 +97,7 @@
 			    this.isEditedPeriod = true
 				this.period = Object.assign({}, period)
 			},
-			update() {
+			updatePeriod() {
 				const payload = {
 					period: this.period,
 					checkResult: this.checkResult,

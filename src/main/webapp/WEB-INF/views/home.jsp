@@ -5,6 +5,7 @@
 		<title>Logged in</title>
 	</head>
 	<body>
-	<script src="http://localhost:8000/main.js"></script>
+		<div id="app"></div>
+		<script src="http://localhost:8000/main.js"></script>
 	</body>
 	</html>

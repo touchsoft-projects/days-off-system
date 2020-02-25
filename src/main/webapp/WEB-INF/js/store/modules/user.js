@@ -59,9 +59,7 @@ const actions = {
         payload.checkResult(result, payload.successMessage, payload.failureMessage)
     },
     async updatePeriodAction({commit}, payload) {
-        console.log(getIndex(payload.period))
         const result = await userApi.updatePeriod(payload.period)
-        console.log(result)
          if (result.ok) {
             commit('updatePeriod', payload.period)
         }

@@ -1,7 +1,5 @@
 <template>
-	<div id="right">
-		<users :users="users"/>
-	</div>
+	<users :users="users"/>
 </template>
 
 <script type="text/javascript">
@@ -16,12 +14,18 @@
 				users: [],
 			}
 		},
-		created() {
-			adminApi.getUsers().then(result =>
-				result.json().then(data =>
-					data.forEach(user => this.users.push(user))
+		mounted() {
+			this.fetchData()
+		},
+		methods: {
+			fetchData() {
+				adminApi.getUsers().then(result =>
+					result.json().then(data => {
+						this.users = []
+						data.forEach(user => this.users.push(user))
+					})
 				)
-			)
+			}
 		},
 	}
 </script>

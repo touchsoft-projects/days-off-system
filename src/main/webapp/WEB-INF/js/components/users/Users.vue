@@ -2,7 +2,7 @@
 	<div>
 		<div class="parent">
 			<div v-if="isEditedUser" class="rightColumn">
-				<edit-user v-on:update-user="saveEdited">
+				<edit-user v-on:update-user="updateUser">
 					<input type="text" v-model="user.firstName" key="first-name" slot="firstName">
 						{{ user.firstName }}
 					</input> 
@@ -29,7 +29,8 @@
 						{{ user.enabled }}
 					</input>
 				</edit-user>
-				<input type="button" value="Show periods" ref="showPeriods" @click="isShowPeriods ? hidePeriods() : showPeriods()" v-if="isShowButtonPeriods" id="buttonShowPeriods"/>
+				<input type="button" @click="isShowPeriods ? hidePeriods() : showPeriods()"
+					value="Show periods" ref="showPeriods" v-if="isShowButtonPeriods" id="buttonShowPeriods"/>
 				<div v-show="isShowMessage">
 					<p>{{ message }}</p>
 				</div>
@@ -86,7 +87,7 @@
 			EditUser, Periods, AddPeriod
 		},
 		mixins: [ commonFunctions ],
-		props: ["users"],
+		props: ["users", "isUpdated"],
 		data() {
 			return {
 				periods: [],
@@ -101,6 +102,18 @@
 				isHide: false,
 			}
 		},
+		watch: {
+		    isUpdated(newIsUpdated) {
+		    	if (newIsUpdated) {
+		    		console.log('changed')
+		    		this.isEditedUser = false
+		    		this.isShowPeriods = false
+		    		this.isShowButtonPeriods = false
+		    		this.isAddPeriod = false
+		    		this.isHide = false
+		    	}
+	    	}
+	    },
 		computed: {
 			userRole() {
 				return userRole => this.getUserRole(userRole)
@@ -138,15 +151,16 @@
 				this.hideMessage()
 			    this.indexEditedUser = number
 			    this.isEditedUser = true
-				this.user = Object.assign({}, user)
+				this.user = JSON.parse(JSON.stringify(user))
 				this.$store.commit('adminStore/setUser', this.user)
 			},
-			saveEdited(user) {
-				var updatedUser = Object.assign({}, this.user)
+			updateUser() {
+				var updatedUser = JSON.parse(JSON.stringify(this.user))
 				var index = this.getIndex(this.users, updatedUser.id)
 				adminApi.updateUser(updatedUser).then(result => {
 					this.checkResult(result, MESSAGES.USER_UPDATED_SUCCESS, MESSAGES.USER_UPDATED_FAILURE)
-					this.users[index] = updatedUser
+					// this.users[index] = updatedUser
+					this.users.splice(index, 1, updatedUser)
 					this.$store.commit('adminStore/setUser', updatedUser)
 				})
 			},
