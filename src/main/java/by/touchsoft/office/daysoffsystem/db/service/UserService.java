@@ -113,7 +113,6 @@ public class UserService {
         userDto.setEnabled(userEntity.isEnabled());
         userDto.setPassportId(userEntity.getPassportId());
         userDto.setRoles(userEntity.getRoles());
-//        userDto.setPeriods(userEntity.getPeriodDtos());
         return userDto;
     }
 }

@@ -1,7 +1,6 @@
 package by.touchsoft.office.daysoffsystem.db.repository.entity;
 
 import by.touchsoft.office.daysoffsystem.enumerations.PeriodType;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.Column;
@@ -12,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 
 @Entity
@@ -26,25 +24,19 @@ public class PeriodEntity {
 
     @NonNull
     @Column(name = "user_id")
-    @NotBlank(message = "Field cannot be empty")
     private String userId;
 
     @NonNull
     @Column(name = "start_date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotBlank(message = "Field cannot be empty")
     private LocalDate startDate;
 
     @NonNull
     @Column(name = "end_date", nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @NotBlank(message = "Field cannot be empty")
     private LocalDate endDate;
 
     @NonNull
     @Enumerated(EnumType.STRING)
     @Column(name = "type_id", nullable = false)
-    @NotBlank(message = "Field cannot be empty")
     private PeriodType periodType;
 
     public String getId() {

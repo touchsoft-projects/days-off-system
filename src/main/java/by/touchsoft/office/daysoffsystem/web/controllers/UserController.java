@@ -10,7 +10,6 @@ import com.google.common.collect.ImmutableList;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -94,9 +93,9 @@ public class UserController {
             UserDto userDto = userService.getUserByEmail(principalUserName);
             if (userDto != null) {
                 periodService.deleteById(id);
+                logger.info("Period was deleted:id=" + id);
             }
         }
-        logger.info("Period was deleted:id=" + id);
         return ResponseEntity.ok().build();
     }
 
@@ -109,5 +108,4 @@ public class UserController {
     public void setPeriodService(PeriodService periodService) {
         this.periodService = periodService;
     }
-
 }
