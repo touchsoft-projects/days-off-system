@@ -1,13 +1,17 @@
 package by.touchsoft.office.daysoffsystem.web.controllers.utils.validation;
 
 import by.touchsoft.office.daysoffsystem.db.repository.dto.PeriodDto;
-import by.touchsoft.office.daysoffsystem.db.repository.dto.UserDto;
+import by.touchsoft.office.daysoffsystem.db.repository.entity.PeriodEntity;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is used to validate entered by user data of
+ * {@link PeriodEntity} entity.
+ */
 public class PeriodValidation {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -40,7 +44,7 @@ public class PeriodValidation {
         if (startDate.isAfter(endDate)) {
             errorMessages += "Start date is after End date";
         }
-        if (!errorMessages.isEmpty()) {
+        if (!errorMessages.isBlank()) {
             return "Period with id " + periodDto.getId() + "contains this errors: " + errorMessages + "\r\n";
         }
         return null;

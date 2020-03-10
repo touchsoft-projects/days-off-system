@@ -79,9 +79,6 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    /**
-     * This method updates the password.
-     */
     public boolean updateUserPassword(UserPasswordDto userPasswordDto) {
         UserEntity userEntity = userRepository.findByEmail(userPasswordDto.getEmail());
         if (userEntity != null) {
