@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -67,14 +69,15 @@ public class UserController {
     }
 
     @PostMapping("/addPeriod")
-    public ResponseEntity<Void> addPeriod(@RequestBody PeriodDto periodDto) throws IncorrectInputException {
+    public ResponseEntity<String> addPeriod(@RequestBody PeriodDto periodDto) {
         ArrayList<String> errors = PeriodValidation.getErrors(periodDto);
         if (errors != null) {
             throw new IncorrectInputException("Validation error", errors);
         } else {
-            if(periodService.addPeriodByEmail(periodDto, SecurityHelper.getUserName())){
+            String id = periodService.addPeriodByEmail(periodDto, SecurityHelper.getUserName());
+            if (id != null) {
                 logger.info("Period was added:" + periodDto);
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok(id);
             } else {
                 logger.warn("Bad request:" + periodDto);
                 return ResponseEntity.badRequest().build();
@@ -82,8 +85,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("/updatePeriod")
-    public ResponseEntity<PeriodDto> updatePeriod(@RequestBody PeriodDto periodDto) throws IncorrectInputException {
+    @PutMapping("/updatePeriod")
+    public ResponseEntity<PeriodDto> updatePeriod(@RequestBody PeriodDto periodDto) {
         ArrayList<String> errors = PeriodValidation.getErrors(periodDto);
         if (errors != null) {
             throw new IncorrectInputException("Validation error", errors);
@@ -98,8 +101,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("/deletePeriodById")
-    public ResponseEntity<Void> deletePeriodById(@RequestParam String id) {
+    @DeleteMapping("/deletePeriodById")
+    public ResponseEntity<PeriodDto> deletePeriodById(@RequestParam String id) {
         String principalUserName = SecurityHelper.getUserName();
         if (principalUserName != null) {
             UserDto userDto = userService.getUserByEmail(principalUserName);
@@ -109,6 +112,19 @@ public class UserController {
             }
         }
         return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/getPeriods")
+    public ResponseEntity<List<PeriodDto>> getPeriods() {
+        String id = userService.getIdByEmail(SecurityHelper.getUserName());
+        List<PeriodDto> periodDtos = null;
+        if (id != null) {
+        	periodDtos = periodService.getByUserId(id);
+        	return ResponseEntity.ok(periodDtos);
+        } else {
+        	return ResponseEntity.badRequest().build();
+        }
     }
 
     @Autowired

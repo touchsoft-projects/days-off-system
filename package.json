@@ -1,0 +1,30 @@
+{
+  "name": "ClientServerApp",
+  "version": "1.0.0",
+  "main": "main.js",
+  "repository": "https://github.com/touchsoft-projects/days-off-system.git",
+  "author": "Hodukov <hodukovaleksandr@yandex.ru>",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/polyfill": "^7.7.0",
+    "vue": "^2.6.11",
+    "vue-resource": "^1.5.1",
+    "vuex": "^3.1.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.4",
+    "vue-loader": "^15.8.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "scripts": {
+    "start": "webpack-dev-server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

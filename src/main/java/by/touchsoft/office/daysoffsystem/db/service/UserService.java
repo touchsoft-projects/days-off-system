@@ -74,6 +74,18 @@ public class UserService {
         UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
         copyToEntity(userDto, userEntity);
     }
+    
+    public void deleteById(final String id) {
+        userRepository.deleteById(id);
+    }
+    
+    public String getIdByEmail(String email) {
+    	UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity != null) {
+        	return userEntity.getId();
+        }
+        return null;
+    }
 
     public void deleteById(final String id) {
         userRepository.deleteById(id);
@@ -97,6 +109,7 @@ public class UserService {
         userEntity.setEnabled(userDto.isEnabled());
         userEntity.setPassportId(userDto.getPassportId());
         userEntity.setRoles(userDto.getRoles());
+		userEntity.setPassword(userDto.getPassword());
     }
 
     private UserDto toDto(UserEntity userEntity) {
@@ -110,6 +123,7 @@ public class UserService {
         userDto.setEnabled(userEntity.isEnabled());
         userDto.setPassportId(userEntity.getPassportId());
         userDto.setRoles(userEntity.getRoles());
+		userDto.setPassword(userEntity.getPassword());
         return userDto;
     }
 }

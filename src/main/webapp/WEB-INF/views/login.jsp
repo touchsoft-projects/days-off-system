@@ -25,7 +25,7 @@
 		</tr>
 		<tr>
 		  <td></td>
-		  <td><button type="submit" id="send">Login</td>
+		  <td><button type="submit" id="send">Login</button></td>
 		</tr>
 		</table>
 	</fieldset>
