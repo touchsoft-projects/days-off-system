@@ -40,6 +40,18 @@ public class UserService {
         userRepository.save(userEntity);
     }
 
+    public List<UserDto> getAll() {
+        List<UserEntity> userEntities = userRepository.findAll();
+        List<UserDto> userDtos = ImmutableList.of();
+        if (!userEntities.isEmpty()) {
+            userDtos = new ArrayList<>();
+            for (UserEntity userEntity : userEntities) {
+                userDtos.add(toDto(userEntity));
+            }
+        }
+        return userDtos;
+    }
+
     public UserDto getUserById(final String id) {
         Optional<UserEntity> optional = userRepository.findById(id);
         UserDto userDto = null;
@@ -58,37 +70,12 @@ public class UserService {
         return userDto;
     }
 
-    public List<UserDto> getAll() {
-        List<UserEntity> userEntities = userRepository.findAll();
-        List<UserDto> userDtos = ImmutableList.of();
-        if (!userEntities.isEmpty()) {
-            userDtos = new ArrayList<>();
-            for (UserEntity userEntity : userEntities) {
-                userDtos.add(toDto(userEntity));
-            }
-        }
-        return userDtos;
-    }
-
-    public void updateUser(UserDto userDto) {
-        UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
-        copyToEntity(userDto, userEntity);
-    }
-    
-    public void deleteById(final String id) {
-        userRepository.deleteById(id);
-    }
-    
     public String getIdByEmail(String email) {
-    	UserEntity userEntity = userRepository.findByEmail(email);
+        UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity != null) {
-        	return userEntity.getId();
+            return userEntity.getId();
         }
         return null;
-    }
-
-    public void deleteById(final String id) {
-        userRepository.deleteById(id);
     }
 
     public boolean updateUserPassword(UserPasswordDto userPasswordDto) {
@@ -101,6 +88,15 @@ public class UserService {
         return false;
     }
 
+    public void updateUser(UserDto userDto) {
+        UserEntity userEntity = userRepository.findByEmail(userDto.getEmail());
+        copyToEntity(userDto, userEntity);
+    }
+
+    public void deleteById(final String id) {
+        userRepository.deleteById(id);
+    }
+
     private void copyToEntity(UserDto userDto, UserEntity userEntity) {
         userEntity.setEmail(userDto.getEmail());
         userEntity.setFirstName(userDto.getFirstName());
@@ -109,7 +105,7 @@ public class UserService {
         userEntity.setEnabled(userDto.isEnabled());
         userEntity.setPassportId(userDto.getPassportId());
         userEntity.setRoles(userDto.getRoles());
-		userEntity.setPassword(userDto.getPassword());
+        userEntity.setPassword(userDto.getPassword());
     }
 
     private UserDto toDto(UserEntity userEntity) {
@@ -123,7 +119,7 @@ public class UserService {
         userDto.setEnabled(userEntity.isEnabled());
         userDto.setPassportId(userEntity.getPassportId());
         userDto.setRoles(userEntity.getRoles());
-		userDto.setPassword(userEntity.getPassword());
+        userDto.setPassword(userEntity.getPassword());
         return userDto;
     }
 }

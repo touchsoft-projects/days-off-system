@@ -8,15 +8,13 @@ import by.touchsoft.office.daysoffsystem.db.service.UserService;
 import by.touchsoft.office.daysoffsystem.web.controllers.utils.validation.PeriodValidation;
 import by.touchsoft.office.daysoffsystem.web.controllers.utils.validation.UserValidation;
 import by.touchsoft.office.daysoffsystem.web.exceptions.custom.IncorrectInputException;
-
 import com.google.common.collect.ImmutableList;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +35,7 @@ public class AdminController {
     private UserService userService;
     private PeriodService periodService;
 
-    @PostMapping("/addUser")
+    @PutMapping("/addUser")
     public ResponseEntity<Void> addUser(@RequestBody UserDto userDto) throws IncorrectInputException {
         ArrayList<String> errors = UserValidation.getErrors(userDto);
         if (errors != null) {
@@ -49,7 +47,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/addUsers")
+    @PutMapping("/addUsers")
     public ResponseEntity<Void> addUsers(@RequestBody ArrayList<UserDto> userDtos) throws IncorrectInputException {
         ArrayList<String> errors = UserValidation.getErrors(userDtos);
         if (errors != null) {
@@ -63,11 +61,10 @@ public class AdminController {
         }
     }
 
-    @PutMapping("/updateUser")
-    public ResponseEntity<Void> updateUser(@RequestBody UserDto userDto) {
-        userService.updateUser(userDto);
-        logger.info("User was updated:" + userDto);
-        return ResponseEntity.ok().build();
+    @GetMapping("/getAll")
+    public ResponseEntity<List<UserDto>> getAll() {
+        List<UserDto> userEntities = userService.getAll();
+        return ResponseEntity.ok(userEntities);
     }
 
     @GetMapping("/getUsersById")
@@ -92,13 +89,7 @@ public class AdminController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<UserDto>> getAll() {
-        List<UserDto> userEntities = userService.getAll();
-        return ResponseEntity.ok(userEntities);
-    }
-
-    @PostMapping("/updateUser")
+    @PutMapping("/updateUser")
     public ResponseEntity<Void> updateUser(@RequestBody UserDto userDto) throws IncorrectInputException {
         ArrayList<String> errors = UserValidation.getErrors(userDto);
         if (errors != null) {
@@ -110,7 +101,7 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/updateUsers")
+    @PutMapping("/updateUsers")
     public ResponseEntity<Void> updateUsers(@RequestBody ArrayList<UserDto> userDtos) {
         for (UserDto userDto : userDtos) {
             userService.updateUser(userDto);
@@ -119,11 +110,11 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/updatePassword")
+    @PutMapping("/updatePassword")
     public ResponseEntity<Void> updatePassword(@RequestBody UserPasswordDto userPasswordDto) throws IncorrectInputException {
         ArrayList<String> errors = UserValidation.getErrors(userPasswordDto);
         if (errors != null) {
-            throw new IncorrectInputException("Validation error", errors);
+            throw new IncorrectInputException("Validesfation error", errors);
         } else {
             boolean result = userService.updateUserPassword(userPasswordDto);
             if (result) {
@@ -136,14 +127,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/deleteUserById")
-    public ResponseEntity<Void> deleteUser(@RequestParam String id) {
-        userService.deleteById(id);
-        logger.info("User was deleted:id=" + id);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/deleteUsers")
+    @DeleteMapping("/deleteUsers")
     public ResponseEntity<Void> deleteUsers(@RequestParam String[] idArray) {
         for (String id : idArray) {
             userService.deleteById(id);
@@ -152,26 +136,30 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    //change exception to bad request exception
-    @PostMapping("/addPeriod")
+    @DeleteMapping("/deleteUserById")
+    public ResponseEntity<Void> deleteUser(@RequestParam String id) {
+        userService.deleteById(id);
+        logger.info("User was deleted:id=" + id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/addPeriod")
     public ResponseEntity<Void> addPeriod(@RequestBody PeriodDto periodDto) throws IncorrectInputException {
         ArrayList<String> errors = PeriodValidation.getErrors(periodDto);
         if (errors != null) {
             throw new IncorrectInputException("Validation error", errors);
-        } else if (id == null) {
-            logger.warn("Bad request:" + periodDto);
-            throw new IncorrectInputException("Bad request. User id not found.", errors);
-        } else {
-            periodService.addAnyPeriod(periodDto);
+        }
+        String id = periodService.addAnyPeriod(periodDto);
+        if (id != null) {
             logger.info("Period was added:" + periodDto.toString());
             return ResponseEntity.ok().build();
+        } else {
+            logger.warn("Bad request:" + periodDto);
+            return ResponseEntity.badRequest().build();
         }
     }
 
-}
-
-    //add id checker like in the method higher
-    @PostMapping("/addPeriods")
+    @PutMapping("/addPeriods")
     public ResponseEntity<Void> addPeriods(@RequestBody ArrayList<PeriodDto> periodDtos) throws IncorrectInputException {
         ArrayList<String> errors = PeriodValidation.getErrors(periodDtos);
         if (errors != null) {
@@ -185,7 +173,18 @@ public class AdminController {
         }
     }
 
-    @PostMapping("/updatePeriod")
+    @GetMapping("/getPeriodsByUserId")
+    public ResponseEntity<List<PeriodDto>> getPeriodsByUserId(@RequestParam String id) {
+        List<PeriodDto> periodDtos;
+        if (id != null) {
+            periodDtos = periodService.getByUserId(id);
+            return ResponseEntity.ok(periodDtos);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/updatePeriod")
     public ResponseEntity<Void> updatePeriod(@RequestBody PeriodDto periodDto) throws IncorrectInputException {
         ArrayList<String> errors = PeriodValidation.getErrors(periodDto);
         if (errors != null) {
@@ -198,24 +197,6 @@ public class AdminController {
                 logger.warn("Bad request:" + periodDto);
                 return ResponseEntity.badRequest().build();
             }
-        }
-    }
-
-    @DeleteMapping("/deletePeriodById")
-    public ResponseEntity<Void> deletePeriodById(@RequestParam String id) {
-        periodService.deleteById(id);
-        logger.info("Period was deleted:id=" + id);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/getPeriodsByUserId")
-    public ResponseEntity<List<PeriodDto>> getPeriodsByUserId(@RequestParam String id) {
-        List<PeriodDto> periodDtos = null;
-        if (id != null) {
-            periodDtos = periodService.getByUserId(id);
-            return ResponseEntity.ok(periodDtos);
-        } else {
-            return ResponseEntity.badRequest().build();
         }
     }
 

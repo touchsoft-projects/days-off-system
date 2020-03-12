@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ExceptionController {
 
     @ExceptionHandler(IncorrectInputException.class)
-    public ResponseEntity<ExceptionMessage> handleError(Exception ex){
+    public ResponseEntity<ExceptionMessage> handleError(Exception ex) {
         ExceptionMessage exceptionMessage = new ExceptionMessage(ex.getMessage(), "Some fields are entered incorrectly");
         return new ResponseEntity<>(exceptionMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }

@@ -1,7 +1,5 @@
 package by.touchsoft.office.daysoffsystem.web.exceptions;
 
-import by.touchsoft.office.daysoffsystem.web.exceptions.custom.IncorrectInputException;
-
 /**
  * This class is used to send exception stack trace
  * with custom added details.

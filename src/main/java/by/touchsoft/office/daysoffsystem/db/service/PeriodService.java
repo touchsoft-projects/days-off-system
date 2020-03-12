@@ -42,17 +42,6 @@ public class PeriodService {
         return periodEntity.getId();
     }
 
-    public boolean updateAnyPeriod(PeriodDto periodDto) {
-        Optional<PeriodEntity> optional = periodRepository.findById(periodDto.getId());
-        if (optional.isPresent()) {
-            PeriodEntity periodEntity = optional.get();
-            copyToEntity(periodDto, periodEntity);
-            periodRepository.save(periodEntity);
-            return true;
-        }
-        return false;
-    }
-
     public String addPeriodByEmail(PeriodDto periodDto, String email) {
         UserEntity userEntity = userRepository.findByEmail(email);
         if (userEntity != null) {
@@ -65,6 +54,27 @@ public class PeriodService {
             }
         }
         return null;
+    }
+
+    public List<PeriodDto> getAll() {
+        List<PeriodEntity> periodEntities = periodRepository.findAll();
+        return toPeriodDtos(periodEntities);
+    }
+
+    public List<PeriodDto> getByUserId(final String id) {
+        List<PeriodEntity> periodEntities = periodRepository.findAllByUserId(id);
+        return toPeriodDtos(periodEntities);
+    }
+
+    public boolean updateAnyPeriod(PeriodDto periodDto) {
+        Optional<PeriodEntity> optional = periodRepository.findById(periodDto.getId());
+        if (optional.isPresent()) {
+            PeriodEntity periodEntity = optional.get();
+            copyToEntity(periodDto, periodEntity);
+            periodRepository.save(periodEntity);
+            return true;
+        }
+        return false;
     }
 
     public boolean updatePeriodByEmail(PeriodDto periodDto, String email) {
@@ -81,18 +91,6 @@ public class PeriodService {
             }
         }
         return true;
-    }
-
-    public List<PeriodDto> getAll() {
-        List<PeriodEntity> periodEntities = periodRepository.findAll();
-        List<PeriodDto> periodDtos = toPeriodDtos(periodEntities);
-        return periodDtos;
-    }
-
-    public List<PeriodDto> getByUserId(final String id) {
-        List<PeriodEntity> periodEntities = periodRepository.findAllByUserId(id);
-        List<PeriodDto> periodDtos = toPeriodDtos(periodEntities);
-        return periodDtos;
     }
 
     public void deleteById(final String id) {

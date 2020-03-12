@@ -13,10 +13,9 @@ import com.google.common.collect.ImmutableList;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,7 +50,7 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/updatePassword")
+    @PutMapping("/updatePassword")
     public ResponseEntity<Void> updatePassword(@RequestBody UserPasswordDto userPasswordDto) throws IncorrectInputException {
         ArrayList<String> errors = UserValidation.getErrors(userPasswordDto);
         if (errors != null) {
@@ -68,8 +67,8 @@ public class UserController {
         }
     }
 
-    @PostMapping("/addPeriod")
-    public ResponseEntity<String> addPeriod(@RequestBody PeriodDto periodDto) {
+    @PutMapping("/addPeriod")
+    public ResponseEntity<String> addPeriod(@RequestBody PeriodDto periodDto) throws IncorrectInputException {
         ArrayList<String> errors = PeriodValidation.getErrors(periodDto);
         if (errors != null) {
             throw new IncorrectInputException("Validation error", errors);
@@ -85,8 +84,34 @@ public class UserController {
         }
     }
 
+    @PutMapping("/addPeriods")
+    public ResponseEntity<Void> addPeriods(@RequestBody ArrayList<PeriodDto> periodDtos) throws IncorrectInputException {
+        ArrayList<String> errors = PeriodValidation.getErrors(periodDtos);
+        if (errors != null) {
+            throw new IncorrectInputException("Validation error", errors);
+        } else {
+            for (PeriodDto periodDto : periodDtos) {
+                periodService.addPeriodByEmail(periodDto, SecurityHelper.getUserName());
+                logger.info("Period was added:" + periodDto);
+            }
+            return ResponseEntity.ok().build();
+        }
+    }
+
+    @GetMapping("/getPeriods")
+    public ResponseEntity<List<PeriodDto>> getPeriods() {
+        String id = userService.getIdByEmail(SecurityHelper.getUserName());
+        List<PeriodDto> periodDtos;
+        if (id != null) {
+            periodDtos = periodService.getByUserId(id);
+            return ResponseEntity.ok(periodDtos);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @PutMapping("/updatePeriod")
-    public ResponseEntity<PeriodDto> updatePeriod(@RequestBody PeriodDto periodDto) {
+    public ResponseEntity<PeriodDto> updatePeriod(@RequestBody PeriodDto periodDto) throws IncorrectInputException {
         ArrayList<String> errors = PeriodValidation.getErrors(periodDto);
         if (errors != null) {
             throw new IncorrectInputException("Validation error", errors);
@@ -112,19 +137,6 @@ public class UserController {
             }
         }
         return ResponseEntity.ok().build();
-    }
-
-
-    @GetMapping("/getPeriods")
-    public ResponseEntity<List<PeriodDto>> getPeriods() {
-        String id = userService.getIdByEmail(SecurityHelper.getUserName());
-        List<PeriodDto> periodDtos = null;
-        if (id != null) {
-        	periodDtos = periodService.getByUserId(id);
-        	return ResponseEntity.ok(periodDtos);
-        } else {
-        	return ResponseEntity.badRequest().build();
-        }
     }
 
     @Autowired
