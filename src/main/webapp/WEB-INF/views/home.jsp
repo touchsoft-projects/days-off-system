@@ -6,6 +6,6 @@
 	</head>
 	<body>
 		<div id="app"></div>
-		<script src="http://localhost:8000/main.js"></script>
+		<script src="js/home.js"></script>
 	</body>
 	</html>
