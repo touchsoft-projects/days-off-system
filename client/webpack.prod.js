@@ -10,6 +10,6 @@ module.exports = merge(common, {
     ],
     output: {
       	filename: 'home.js',
-       	path: path.resolve(__dirname, 'src', 'main', 'webapp', 'WEB-INF', 'views', 'js'),
+       	path: path.resolve(__dirname, 'target', 'js'),
     },
 });

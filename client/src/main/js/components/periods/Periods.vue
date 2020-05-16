@@ -111,7 +111,7 @@
 				}
 			},
 			remove(period, index) {
-				var isDelete = confirm("You really want to delete the period №" + index + " ?")
+				var isDelete = confirm("Are you sure that want to delete the period №" + index + " ?")
 				if (isDelete) {
 					const payload = {
 						id: period.id, 

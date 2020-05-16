@@ -14,14 +14,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-
         registry.addResourceHandler("/js/**")
-                .addResourceLocations("/WEB-INF/views/js/");
+                .addResourceLocations("/WEB-INF/js/");
     }
 
     @Bean

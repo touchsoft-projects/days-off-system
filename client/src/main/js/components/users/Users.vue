@@ -65,7 +65,7 @@
 			</div>
 		</div>
 		<div id="parentPeriods">
-			<input type="button" value="AddPeriod" @click="isAddPeriod ? hideAddPeriod() : addPeriod()"
+			<input type="button" value="Add Period" @click="isAddPeriod ? hideAddPeriod() : addPeriod()"
 				v-if="isShowPeriods" ref="addPeriod" id="buttonAddPeriod">
 			<h3 v-if="isShowPeriods" id="labelPeriodsFor">Periods for {{ user.email }}</h3>
 			<add-period v-if="isAddPeriod" class="rightColumn"/>

@@ -63,7 +63,7 @@
                 ],
                 tabsAdmin: [
                     {
-                        name: 'AddUser',
+                        name: 'Add User',
                         component: 'AddUser'
                     },
                     {
