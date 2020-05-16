@@ -1,0 +1,8 @@
+export const PERIOD_ADDED_SUCCESS = 'Period was added.'
+export const PERIOD_ADDED_FAILURE = 'Period was not added.'
+export const PERIOD_UPDATED_SUCCESS = 'Period was updated.'
+export const PERIOD_UPDATED_FAILURE = 'Period was not updated.'
+export const USER_ADDED_SUCCESS = 'User was added.'
+export const USER_ADDED_FAILURE = 'User was not added.'
+export const USER_UPDATED_SUCCESS = 'User was updated.'
+export const USER_UPDATED_FAILURE = 'User was not updated.'
