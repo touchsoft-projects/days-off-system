@@ -82,7 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new PasswordEncoder() {
             @Override
             public String encode(CharSequence rawPassword) {
-                return rawPassword.toString();
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
+                return passwordEncoder.encode(rawPassword);
             }
 
             @Override

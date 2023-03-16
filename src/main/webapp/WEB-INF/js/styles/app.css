@@ -1,0 +1,117 @@
+#side {
+    float: left;
+    width: 120px;
+}
+
+#content {
+    float: left;
+}
+
+#header {
+    height: 40px;
+    padding: 10px;
+}
+
+#logout, #userName {
+    padding: 10px;
+    float: right;
+}
+
+.parent {
+    overflow: hidden;
+    display: table;
+    padding: 10px;
+}
+
+.leftColumn {
+    display: table;
+    margin-right: 10px;
+    padding: 0 10px;
+}
+.rightColumn {
+    float: right;
+    padding: 0 10px;
+    margin-left: 10px;
+}
+
+#parentPeriods {
+    display: table;
+}
+
+.containerAdd {
+    display: table;
+    padding: 10px;
+}
+
+#buttonShowPeriods, .buttonSave {
+    display: block;
+    width: 100px;
+    margin: 10px 0 10px auto;
+}
+
+#buttonAddPeriod {
+    display: block;
+    width: 130px;
+    margin: 20px;
+}
+
+#labelPeriodsFor {
+    margin: 20px;
+}
+
+#labelPeriodNumber, #labelNewPeriod {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    margin: 5px;
+}
+
+.backgroundWhite {
+    background: white;
+}
+
+.info td, .info th{
+    font-size: 18pt;
+    padding: 10px;
+}
+
+.info th {
+    text-align: left;
+}
+
+th {
+    background: green;
+    opacity: 0.7;
+    padding: 3px;
+    white-space: nowrap;
+    text-align: left;
+}
+
+td {
+    background: #fc0;
+    opacity: 0.6;
+    padding: 3px;
+}
+
+.leftColumn td, .leftColumn th {
+    text-align: center;
+}
+
+.tab-button {
+    width: 100px;
+    height: 40px;
+    padding: 6px 10px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: #f0f0f0;
+    margin-bottom: 0px;
+    margin-right: 10px;
+}
+.tab-button:hover {
+    background: #e0e0e0;
+}
+.tab-button.active {
+    background: #e0e0e0;
+}

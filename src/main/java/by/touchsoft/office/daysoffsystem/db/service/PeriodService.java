@@ -35,11 +35,35 @@ public class PeriodService {
     public PeriodService() {
     }
 
-    public boolean addAnyPeriod(PeriodDto periodDto) {
+    public String addAnyPeriod(PeriodDto periodDto) {
         PeriodEntity periodEntity = new PeriodEntity();
         copyToEntity(periodDto, periodEntity);
-        periodRepository.save(periodEntity);
-        return true;
+        periodEntity = periodRepository.save(periodEntity);
+        return periodEntity.getId();
+    }
+
+    public String addPeriodByEmail(PeriodDto periodDto, String email) {
+        UserEntity userEntity = userRepository.findByEmail(email);
+        if (userEntity != null) {
+            String userId = userEntity.getId();
+            if (Objects.equals(userId, periodDto.getUserId())) {
+                PeriodEntity periodEntity = new PeriodEntity();
+                copyToEntity(periodDto, periodEntity);
+                periodEntity = periodRepository.save(periodEntity);
+                return periodEntity.getId();
+            }
+        }
+        return null;
+    }
+
+    public List<PeriodDto> getAll() {
+        List<PeriodEntity> periodEntities = periodRepository.findAll();
+        return toPeriodDtos(periodEntities);
+    }
+
+    public List<PeriodDto> getByUserId(final String id) {
+        List<PeriodEntity> periodEntities = periodRepository.findAllByUserId(id);
+        return toPeriodDtos(periodEntities);
     }
 
     public boolean updateAnyPeriod(PeriodDto periodDto) {
@@ -49,20 +73,6 @@ public class PeriodService {
             copyToEntity(periodDto, periodEntity);
             periodRepository.save(periodEntity);
             return true;
-        }
-        return false;
-    }
-
-    public boolean addPeriodByEmail(PeriodDto periodDto, String email) {
-        UserEntity userEntity = userRepository.findByEmail(email);
-        if (userEntity != null) {
-            String userId = userEntity.getId();
-            if (Objects.equals(userId, periodDto.getUserId())) {
-                PeriodEntity periodEntity = new PeriodEntity();
-                copyToEntity(periodDto, periodEntity);
-                periodRepository.save(periodEntity);
-                return true;
-            }
         }
         return false;
     }
@@ -81,18 +91,6 @@ public class PeriodService {
             }
         }
         return true;
-    }
-
-    public List<PeriodDto> getAll() {
-        List<PeriodEntity> periodEntities = periodRepository.findAll();
-        List<PeriodDto> periodDtos = toPeriodDtos(periodEntities);
-        return periodDtos;
-    }
-
-    public List<PeriodDto> getByUserId(final String id) {
-        List<PeriodEntity> periodEntities = periodRepository.findAllByUserId(id);
-        List<PeriodDto> periodDtos = toPeriodDtos(periodEntities);
-        return periodDtos;
     }
 
     public void deleteById(final String id) {
